@@ -11,6 +11,8 @@ var EventSchema = new mongoose.Schema({
   event_owner: String,
   event_cost: Number,
   event_type: String,
+  event_reg_status: String,
+  event_round: Number,
   updated_at: { type: Date, default: Date.now },
 });
 

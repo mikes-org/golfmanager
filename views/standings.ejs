@@ -60,8 +60,6 @@
 	</script>
     <h1><%= title %></h1>
     <div>
-	    <div><input type='button' onclick="saveTeamData(this)" value="Save Updates"/></div>
-	    <div class='message' id='saveStatus'></div>
 	    <div class="container">
 	    <div id="divEditPlayers" class="fixed, divShow">
 		    <h4>Current Event Standings</h4>
@@ -98,7 +96,7 @@
 												    </thead>
 												      <tbody data-bind="foreach: players">
 												        <tr>
-												           <td  data-bind="text: team_player_id"></td>
+												           <td  data-bind="text: team_player_name"></td>
 												           <td  data-bind="text: team_player_position"></td>
 												           <td  data-bind="text: team_player_position"></td>
 											            </tr>

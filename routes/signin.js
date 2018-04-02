@@ -32,19 +32,32 @@ router.post('/verifyuser', async function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/:reg_code', async function(req, res, next) {
-    console.log("REG getting event id:" + req.params.reg_code);
+router.get('/:event_id', async function(req, res, next) {
+    console.log("REG getting event id:" + req.params.event_id);
     let eventId = "not set";
-    await Event.find({event_code: req.params.reg_code}).exec().then((data) => {
-            console.log("Got Event:" + util.inspect(data));
-            if (data.length > 0)
+    try {
+
+      eventData = await Event.find({event_tourn_id: req.params.event_id}).exec();
+            console.log("Got Event:" + util.inspect(eventData));
+            if (eventData && eventData.length > 0)
             {
-              eventId = data[0]._id;
+              eventId = eventData[0].event_tourn_id;
+            }
+	    else 
+	    {
+	       console.log("Redirecting to sign in");
+               res.render('index', { title: '2018 Masters',event_id: 'b404a8d5-5e33-4417-ae20-5d4d147042ee' });
+	       return;
             }
             console.log("d:" + eventId);
-    }, err => { console.log("Error getting reg code:" + req.params.reg_code);
-    });
-  console.log("Registering for event:" + eventId);
+    }
+    catch (error) 
+    { 
+	      console.log("Error getting reg code:" + req.params.event_id);
+	      res.render('index', { title: '2018 Masters',event_id: 'b404a8d5-5e33-4417-ae20-5d4d147042ee' });
+	      return;
+    }
+  console.log("Signed in to event:" + eventId);
   res.render('signin', { title: '2018 Masters', event_id:eventId });
 });
 

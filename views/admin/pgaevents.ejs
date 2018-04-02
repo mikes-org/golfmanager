@@ -15,7 +15,7 @@
     var self = this;
     function eventsModel() 
     {
-      self.edit_event = ko.observable({ _id: "", event_name: '',event_year: '', event_code: '', event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
+      self.edit_event = ko.observable({ _id: "", event_name: '',event_year: '', event_code: '', event_round: '',event_reg_status: '',event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
       self.events = ko.observableArray([]);
       $.getJSON("/events",function (data) {
             console.log("Data:" + JSON.stringify(data));
@@ -54,12 +54,14 @@
   	  let eventName = $('#eventName').val();
   	  let eventYear = $('#eventYear').val();
   	  let eventCode = $('#regCode').val();
+  	  let eventRound = $('#currentRound').val();
+  	  let eventRegStatus = $('#regStatus').val();
   	  let eventCost = parseInt($('#eventCost').val());
   	  let eventTournId = $('#tournID').val();
   	  let eventStartDate = $('#startDate').val();
   	  let eventEndDate = $('#startDate').val();
       let eventSaveData = {event_name: eventName, 
-      				event_year: eventYear, event_code: eventCode, 
+      				event_year: eventYear, event_code: eventCode , event_reg_status: eventRegStatus , event_round: eventRound, 
       				event_tourn_id: eventTournId, event_start_date: eventStartDate, event_end_date: eventEndDate, event_cost: eventCost};
   	  if (eventId == "")
   	  {
@@ -99,7 +101,7 @@
 		  }); 
   	  }
       $('#btnSave').val('Save')
-      self.edit_event({ _id: "", event_name: '',event_year: '', event_code: '', event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
+      self.edit_event({ _id: "", event_name: '',event_year: '', event_code: '', event_round: '', event_reg_status: '', event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
     }
     
     function getResults(data) {
@@ -134,6 +136,12 @@
           <td>Tourn ID</td><td><input data-bind="value: event_tourn_id" type="text" id="tournID"></td>
         </tr>
         <tr>
+          <td>Registration Status</td><td><input data-bind="value: event_reg_status" type="text" id="regStatus"></td>
+        </tr>
+        <tr>
+          <td>Current Round</td><td><input data-bind="value: event_round" type="text" id="currentRound"></td>
+        </tr>
+        <tr>
           <td>Year</td><td><input type="text" data-bind="value: event_year" id="eventYear"></td>
         </tr>
         <tr>
@@ -156,6 +164,8 @@
 		          <th>Event Name</th>
 		          <th>Event Code</th>
 		          <th>Pga ID</th>
+		          <th>Reg Status</th>
+		          <th>Current Round</th>
 		          <th>Event Start Date</th>
 		          <th>Event End Date</th>
 	                  <th></th>
@@ -167,6 +177,8 @@
 		            <td data-bind="text: event_name"></td>
 		            <td data-bind="text: event_code"></td>
 		            <td data-bind="text: event_tourn_id"></td>
+		            <td data-bind="text: event_reg_status"></td>
+		            <td data-bind="text: event_round"></td>
 		            <td data-bind="text: event_start_date"></td>
 	                    <td data-bind="text: event_end_date"></td>
 			    <td ><button data-bind="attr: {event_tourn_id: event_tourn_id}" onclick="getResults(this)">Results</button>&nbsp;<button data-bind="attr: {event_id:_id}" onclick="editEvent(this)">Edit</button></td>

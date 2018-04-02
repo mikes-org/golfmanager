@@ -24,6 +24,11 @@ div.divhide { display: none }
 div.divshow { display: block }
 div.divLeft { float:left }
 
+a.divLarge {
+   color:blue; 
+   font: bold 25px arial, sans-serif;
+}
+
 .roundHeader {
    color:blue; 
    font: bold 15px arial, sans-serif;

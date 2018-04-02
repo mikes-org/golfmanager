@@ -39,7 +39,7 @@ async function readPlayerRanking() {
 
 	var obj = {};
 	console.log("reading1");
-	obj = fs.readFileSync("/home/mlacours/projects/mal/node-express/masters-app/data/rankings.json", 'utf8'); // ,function (err, data) {
+	obj = fs.readFileSync("./data/rankings.json", 'utf8'); // ,function (err, data) {
 	var ret  = JSON.parse(obj);
 	//console.log("parsed" + util.inspect(ret));
 	console.log("read")
@@ -51,7 +51,7 @@ async function readEventScores() {
 
 	var obj = {};
 	console.log("reading1");
-	obj = fs.readFileSync("/home/mlacours/projects/mal/node-express/masters-app/data/leaderboard.json", 'utf8'); // ,function (err, data) {
+	obj = fs.readFileSync("./data/leaderboard.json", 'utf8'); // ,function (err, data) {
 	var ret  = JSON.parse(obj);
 	//console.log("parsed" + util.inspect(ret));
 	console.log("read")

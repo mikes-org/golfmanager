@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
 async function getEvent(event_id)
 {
 	console.log("Event finding for:" + event_id);
-	let eventData  = await Event.find({ _id: event_id}).exec();
+	let eventData  = await Event.find({ event_tourn_id: event_id}).exec();
     if (eventData.length > 0)
     {
     	console.log("Event Data" + eventData);

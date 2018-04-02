@@ -76,12 +76,17 @@ router.post('/', async function(req, res, next) {
 		return
 	}
 	
-	
-	console.log("Adding user")
-	User.create(req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
+	try { 
+	  console.log("Adding user")
+	  newUserData = await User.create(req.body);
+	  console.log("user created:" + util.inspect(newUserData));
+           req.session['userdata'] = { user_id: newUserData._id, event_id: newUserData.user_event_id, user_name: newUserData.user_name };
+	   res.json({status: "SUCESS"});
+	}
+	catch (error)
+	{
+		res.json({status: "ERROR", message: error});
+	}
 });
 
 /* UPDATE USER */

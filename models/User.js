@@ -7,6 +7,7 @@ var UserSchema = new mongoose.Schema({
   user_password: String,
   user_event_id: String,
   user_status: String,
+  user_role: String,
   user_balance: Number,
   updated_at: { type: Date, default: Date.now },
 });
