@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ../partials/header-admin %>
+	</header>    
+    <script>
+    var self = this;
+    //var self.event_id = "";
+    
+    function resultsModel() 
+    {
+      var tournId = "<%= pga_event_id %>";
+      self.results = ko.observableArray([]);
+      $.getJSON("/scores/" + tournId,function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            self.results(data);
+            self.event_id = data.id;
+     });
+    };
+	
+    $( document ).ready(function() {
+        console.log( "Getting Results" );
+    	ko.applyBindings(new resultsModel());
+    });
+    
+    function updateResults(data) 
+    {
+    	//alert(data);
+  		var curRound = $('#round').val();
+  		console.log(curRound);
+  		console.log("Event:" + self.event_id);
+        $.getJSON("/admin/updatescores/" + self.event_id + "/" + curRound, function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            //self.results(data.leaderboard);
+            //event_id = data.id;
+            //console.log("Results:" + data.leaderboard);
+     });
+    };
+    
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <div>
+         <ul>
+            <li role="presentation"><input type='button' onclick="updateResults()" value="Update"><input type="text" value="1" id="round"></li>
+        </ul>   
+    </div>
+    <br/>
+    <div>
+		<table border="1">
+		    <thead>
+		        <tr>
+		          <th>ID</th>
+		          <th>Name</th>
+		          <th>Total Position</th>
+		          <th>Total Score</th>
+		          <th>Total Strokes</th>
+		          <th>Round 1 Score</th>
+		          <th>Round 1 Total</th>
+		          <th>Round 1 Position</th>
+		          <th>Round 2 Score</th>
+		          <th>Round 2 Total</th>
+		          <th>Round 2 Position</th>
+		          <th>Round 3 Score</th>
+		          <th>Round 3 Total</th>
+		          <th>Round 3 Position</th>
+		          <th>Round 4 Score</th>
+		          <th>Round 4 Total</th>
+		          <th>Round 4 Position</th>
+	              <th></th>
+		      </tr>
+		    </thead>
+		      <tbody data-bind="foreach: results">
+		        <tr>
+		            <td data-bind="text: player_id"></td>
+		            <td><span data-bind="text: player_name"></span></td>
+		            <td data-bind="text: total_position"></td>
+		            <td data-bind="text: total_strokes"></td>
+		            <td data-bind="text: total_to_par"></td>
+		            <td data-bind="text: round_1_to_par"></td>
+		            <td data-bind="text: round_1_total"></td>
+		            <td data-bind="text: round_1_position"></td>
+		            <td data-bind="text: round_2_to_par"></td>
+		            <td data-bind="text: round_2_total"></td>
+		            <td data-bind="text: round_2_position"></td>
+		            <td data-bind="text: round_3_to_par"></td>
+		            <td data-bind="text: round_3_total"></td>
+		            <td data-bind="text: round_3_position"></td>
+		            <td data-bind="text: round_4_to_par"></td>
+		            <td data-bind="text: round_4_total"></td>
+		            <td data-bind="text: round_4_position"></td>
+			    <td><button data-bind="attr: {player_id: player_id}" onclick="getResults(this)">Edit</button></td>
+		        </tr>
+		      </tbody>
+		  </table>
+    </div>
+	<footer>
+	    <% include ../partials/footer %>
+	</footer>
+  </body>
+</html>

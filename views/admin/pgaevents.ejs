@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ../partials/header-admin %>
+	</header>    
+    <script>
+    var self = this;
+    function eventsModel() 
+    {
+      self.edit_event = ko.observable({ _id: "", event_name: '',event_year: '', event_code: '', event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
+      self.events = ko.observableArray([]);
+      $.getJSON("/events",function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            self.events(data);
+            //console.log("Config:" + self.config);
+     });
+    };
+	
+    $( document ).ready(function() {
+        console.log( "Getting Events" );
+    	ko.applyBindings(new eventsModel());
+    });
+    
+    function editEvent(data)
+    {
+      console.log($('#btnSave'));
+      $('#btnSave').val('Update')
+  	  var event_id = $(data).attr('event_id');
+      var items = ko.toJS(self.events);
+      for (var i=0;i<items.length;i++)
+      {
+        if (event_id == items[i]._id)
+        {
+            console.log("i:" + i);
+            self.edit_event(items[i]);
+            return true;
+        }
+      }
+    }
+    
+    function saveData(data) 
+    {
+      var saveType = $('#btnSave').val();
+  	  console.log(saveType);
+  	  let eventId = $('#eventId').val();
+  	  let eventName = $('#eventName').val();
+  	  let eventYear = $('#eventYear').val();
+  	  let eventCode = $('#regCode').val();
+  	  let eventCost = parseInt($('#eventCost').val());
+  	  let eventTournId = $('#tournID').val();
+  	  let eventStartDate = $('#startDate').val();
+  	  let eventEndDate = $('#startDate').val();
+      let eventSaveData = {event_name: eventName, 
+      				event_year: eventYear, event_code: eventCode, 
+      				event_tourn_id: eventTournId, event_start_date: eventStartDate, event_end_date: eventEndDate, event_cost: eventCost};
+  	  if (eventId == "")
+  	  {
+		  $.post( "/events", eventSaveData)
+		  	.done(function( data ) {
+			  console.log("Result:" + data)
+			  //alert(data)
+			  if (data.status == "ERROR")
+			  {
+		    	$('#saveStatus').html(data.message)
+			    $('#saveStatus').attr('class','trRowAlert')
+			  }
+		      else
+		      {
+		    	$('#saveStatus').html("Save Complete!")
+			    $('#saveStatus').attr('class','trRowNormal')
+		      }
+		  }); 
+  	  
+  	  }
+  	  else
+  	  {
+		  $.post( "/events/" + eventId, eventSaveData)
+		  	.done(function( data ) {
+			  console.log("Result:" + data)
+			  //alert(data)
+			  if (data.status == "ERROR")
+			  {
+		    	$('#saveStatus').html(data.message)
+			    $('#saveStatus').attr('class','trRowAlert')
+			  }
+		      else
+		      {
+		    	$('#saveStatus').html("Save Complete!")
+			    $('#saveStatus').attr('class','trRowNormal')
+		      }
+		  }); 
+  	  }
+      $('#btnSave').val('Save')
+      self.edit_event({ _id: "", event_name: '',event_year: '', event_code: '', event_tourn_id: '', event_start_date: '', event_end_date: '', event_cost: ''});
+    }
+    
+    function getResults(data) {
+      
+  	  console.log($(data).attr('event_tourn_id'));
+  	  tournId = $(data).attr('event_tourn_id');
+      window.location.href = "/admin/manageresults/" + tournId;
+    }
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <div>
+         <div id="saveStatus"></div>
+    </div>
+    <br/>
+    <div id="editResults">
+      <table>
+	    <tbody data-bind="with: edit_event">
+        <tr>
+          <td>ID</td><td><input readonly type="text" data-bind="value: _id" id="eventId"></td>
+        </tr>
+        <tr>
+          <td>Name</td><td><input data-bind="value: event_name" type="text" id="eventName"></td>
+        </tr>
+        <tr>
+          <td>Reg Code</td><td><input data-bind="value: event_code" type="text" id="regCode"></td>
+        </tr>
+        <tr>
+          <td>Cost</td><td><input data-bind="value: event_cost" type="text" id="eventCost"></td>
+        </tr>
+        <tr>
+          <td>Tourn ID</td><td><input data-bind="value: event_tourn_id" type="text" id="tournID"></td>
+        </tr>
+        <tr>
+          <td>Year</td><td><input type="text" data-bind="value: event_year" id="eventYear"></td>
+        </tr>
+        <tr>
+          <td>Start Date</td><td><input type="text" data-bind="value: event_start_date" id="startDate"></td>
+        </tr>
+        <tr>
+          <td>End Date</td><td><input type="text" data-bind="value: event_end_date" id="endDate"></td>
+        </tr>
+        <tr>
+          <td colspan=2 style="text-align:center"><input id="btnSave" type="button" value="Save" onclick="saveData()"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+		<table border="1">
+		    <thead>
+		        <tr>
+		          <th>Event ID</th>
+		          <th>Event Name</th>
+		          <th>Event Code</th>
+		          <th>Pga ID</th>
+		          <th>Event Start Date</th>
+		          <th>Event End Date</th>
+	                  <th></th>
+		      </tr>
+		    </thead>
+		      <tbody data-bind="foreach: events">
+		        <tr>
+		            <td data-bind="text: _id"></td>
+		            <td data-bind="text: event_name"></td>
+		            <td data-bind="text: event_code"></td>
+		            <td data-bind="text: event_tourn_id"></td>
+		            <td data-bind="text: event_start_date"></td>
+	                    <td data-bind="text: event_end_date"></td>
+			    <td ><button data-bind="attr: {event_tourn_id: event_tourn_id}" onclick="getResults(this)">Results</button>&nbsp;<button data-bind="attr: {event_id:_id}" onclick="editEvent(this)">Edit</button></td>
+		        </tr>
+		      </tbody>
+		  </table>
+    </div>
+	<footer>
+	    <% include ../partials/footer %>
+	</footer>
+  </body>
+</html>

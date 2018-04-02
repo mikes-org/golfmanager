@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ./partials/header %>
+	</header>    
+    <script>
+    var self = this;
+    function usersModel() 
+    {
+      self.userdata = ko.observableArray([]);
+      $.getJSON("/userdata",function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            self.userdata(data);
+            //console.log("Config:" + self.config);
+     });
+    };
+	
+    $( document ).ready(function() {
+        console.log( "Getting Users" );
+    	ko.applyBindings(new usersModel());
+    });
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <p>Users entered in the <%= title %> golf challenge</p>
+    <div>
+		<table border="1">
+		    <thead>
+		        <tr>
+		          <th>Name</th>
+		          <th>Email</th>
+		          <th>Event</th>
+		          <th>Status</th>
+		          <th>Balance</th>
+		      </tr>
+		    </thead>
+		      <tbody data-bind="foreach: userdata">
+		        <tr>
+		            <td data-bind="text: user_name"></td>
+		            <td data-bind="text: user_email"></td>
+		            <td data-bind="text: user_event_id"></td>
+		            <td data-bind="text: user_status"></td>
+		            <td data-bind="text: user_balance"></td>
+		        </tr>
+		      </tbody>
+		  </table>
+    </div>
+	<footer>
+	    <% include ./partials/footer %>
+	</footer>
+  </body>
+</html>

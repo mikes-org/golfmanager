@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+		<%-  include partials/header %>
+	</header>    
+    <script>
+    var userId = "<%= user_id %>";
+    var eventId = "<%= event_id %>";
+    var self = this;
+    self.positions = ['A','B','C','D'];
+    self.team_json_data = {};
+    self.team_json_data.playerRounds = [];
+    self.activeDiv = 'divRound1';
+	self.activeDay = '1';    
+	self.roundCutoff = 2;
+	
+    function teamModel() 
+    {
+      self.teamdata = {};
+      self.teamdata.roster = ko.observableArray([]);
+      self.teamdata.playerRounds = ko.observableArray([]);
+      $.getJSON("/teams/" + userId + "/" + eventId ,function (data) {
+            console.log("Team Data:" + JSON.stringify(data));
+            if (data) {
+            	self.team_json_data = data;
+            	self.teamdata.roster(data.roster);
+            	self.teamdata.playerRounds(data.playerRounds);
+		        for (_rnd=1;_rnd<=4;_rnd++)
+		        {
+		          for (pos = 0;pos<4;pos++)
+		          {
+		             player = data.playerRounds[_rnd-1][pos]
+		             eval("$('#round" + _rnd + self.positions[pos] + "').val(player.team_player_id)");
+		          }
+		        }
+            }
+            //console.log("Config:" + self.config);
+     });
+      console.log("Players Model")
+      self.pgaplayers = ko.observableArray([]);
+      $.getJSON("/pgaplayers",function (data) {
+            //console.log("Players Data:" + JSON.stringify(data));
+            self.pgaplayers(data);
+            //console.log("Config:" + self.config);
+     });
+    };
+	
+    function addPlayer(data) 
+    {
+    	//alert(self.activeDay);
+  		console.log($(data).attr('player_id'));
+  		player_id = $(data).attr('player_id');
+  		var pos = "A";
+  		var round = parseInt(self.activeDay);
+  		playerName = $(data).attr('player_first_name') + ', ' +  $(data).attr('player_last_name')
+  		var newPlayer = {team_user_id: userId, team_event_id: eventId, team_player_id: player_id, team_player_name: playerName};
+	    console.log(self.activeDay);
+  		//console.log('self.team_json_data.round' + self.activeDay + '.push(' + newPlayer + ')');
+  		//eval('self.team_json_data.round' + self.activeDay + '.push(newPlayer)');
+  		//eval('self.teamdata.round' + self.activeDay + '(self.team_json_data.round' + self.activeDay + ')');
+  		self.team_json_data.roster.push(newPlayer);
+  		self.teamdata.roster(self.team_json_data.roster);
+    };
+    
+    function removePlayer(data) 
+    {
+    	//alert(data);
+  		console.log($(data).attr('player_id'));
+  		player_id = $(data).attr('player_id');
+	    //console.log(self.team_json_data);
+	    for(var i = self.team_json_data.roster.length - 1; i >= 0; i--) {
+	        console.log(player_id);
+    		if(self.team_json_data.roster[i].team_player_id == player_id) {
+	        	console.log('removing');
+       			self.team_json_data.roster.splice(i, 1);
+    		}
+		}
+  		//eval('self.team_json_data.round' + self.activeDay + 'push(newPlayer)');
+  		self.teamdata.roster(self.team_json_data.roster);
+    };
+    
+    function saveTeamData()
+    {
+	  console.log("Team Data:" + self.team_json_data)
+	  
+	  rounds = [];
+	  
+  	  curRound = 1;
+	  for (_rnd=0;_rnd<4;_rnd++)
+	  {
+  	    players = [];
+	    for (pos = 0;pos<4;pos++)
+	    {
+  	        player = {};
+	        playerId = eval("$('#round" + curRound + self.positions[pos] + "').val()");
+	        pName = eval("$('#round" + curRound + self.positions[pos] + " :selected').text()");
+	        console.log('p:' + pName + ',' + curRound) ;
+  		    player = {team_player_round: curRound , team_user_id: userId, team_event_id: eventId, team_player_name: pName, team_player_id: playerId, team_player_position: pos };
+  		    console.log("np:" + player.team_player_round);
+  		    players.push(player);
+  		    for (n=0;n< players.length;n++)
+	            console.log("D:" +n + "," + players[n].team_player_round);
+	    }
+	    if (curRound < self.roundCutoff && (players[0].team_player_id == players[1].team_player_id || players[0].team_player_id == players[2].team_player_id || 
+	           players[0].team_player_id == players[3].team_player_id || players[1].team_player_id == players[2].team_player_id || 
+	           players[1].team_player_id == players[3].team_player_id || players[2].team_player_id == players[3].team_player_id))
+	    {
+           alert('Error: Players must be unique for round ' + curRound);	       
+	       return;
+	    }
+	    
+  		rounds.push(players);
+  		console.log("l:" + rounds.length);
+	    console.log("r:" + rounds[_rnd][0].team_player_round);
+	    curRound = curRound + 1;
+	    console.log("INCR:" + curRound);
+  	  }
+  	  
+  	  
+  	  
+  for (x=0; x<4; x++)
+  {
+	  for (pos=0;pos<4;pos++)
+	  {
+		  console.log("TP2R:" + x + "," +  pos + ":" + rounds[x][pos].team_player_round);
+	  }
+	  
+  }
+	  
+	  self.team_json_data.playerRounds = rounds;
+      var updateData = {user_id: userId, event_id: eventId, team :  JSON.stringify(self.team_json_data) }
+	  $.post( "teams/replace", updateData)
+	  .done(function( data ) {
+		  console.log("Result:" + data)
+		  //alert(data)
+		  if (data.status == "ERROR")
+		  {
+	    	$('#saveStatus').html(data.message)
+		    $('#saveStatus').attr('class','trRowAlert')
+		  }
+	      else
+	      {
+	    	$('#saveStatus').html("Save Complete!")
+		    $('#saveStatus').attr('class','trRowNormal')
+	      }
+	  }); 
+    }
+    
+    $( document ).ready(function() {
+        console.log( "Getting Team Data" );
+        console.log( "Getting Player Data" );
+    	//ko.applyBindings(new playersModel());
+    	ko.applyBindings(new teamModel());
+    });
+    
+    function changeActiveDay(data)
+    {
+  		 console.log($(data).attr('div_id'));
+  		 console.log($(data).attr('day_num'));
+         var newDiv = $(data).attr('div_id');
+         var newDay = $(data).attr('day_num');
+	     $('#' + self.activeDiv).attr('class','divhide')
+	     $('#' + newDiv).attr('class','divshow')
+		 $('#round' + newDay).attr("type","hidden");
+		 $('#round' + self.activeDay).attr("type","button");
+		 $('#dayHeader').html('Current roster for day ' + newDay);
+		 self.activeDiv = newDiv;
+		 self.activeDay = newDay;
+    }
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <div>
+	    <div><input type='button' onclick="saveTeamData(this)" value="Save Updates"/></div>
+	    <div class='message' id='saveStatus'></div>
+	    <div class="container">
+	    <div id="divEditPlayers" class="fixed, divShow">
+		    <h4>PGA Players by World Rank</h4>
+		    <div>
+				<table border="1">
+				    <thead>
+				        <tr>
+				          <th>World Rank</th>
+				          <th>Last Name</th>
+				          <th>First Name</th>
+				          <th>Country</th>
+				          <th>Action</th>
+				      </tr>
+				    </thead>
+				      <tbody data-bind="foreach: pgaplayers">
+				        <tr>
+				            <td data-bind="text: player_world_rank"></td>
+				            <td data-bind="text: player_last_name"></td>
+				            <td data-bind="text: player_first_name"></td>
+				            <td data-bind="text: player_country"></td>
+				            <td><button data-bind="attr: {player_id: player_id, player_first_name: player_first_name, player_last_name: player_last_name}" onclick="addPlayer(this)">Add</button></td>
+				        </tr>
+				      </tbody>
+				  </table>
+		    </div>
+	    </div>
+	    <div id="divActiveRoster" class="flex-item">
+		    <h4 id="dayHeader">Current roster</h4>
+		    <div id="divRoster" class="divLeft">
+				<table border="1">
+				    <thead>
+				        <tr>
+				          <th>Name</th>
+				          <th></th>
+				      </tr>
+				    </thead>
+				      <tbody data-bind="foreach: teamdata.roster">
+				        <tr>
+				            <td data-bind="text: team_player_name"></td>
+				            <td><button data-bind="attr: {player_id: team_player_id}" onclick="removePlayer(this)">Remove</button></td>
+				        </tr>
+				      </tbody>
+				  </table>
+		    </div>
+		    <div id="rounds" class="divLeft">
+				<table border="1">
+		           <tr>
+		             <td class="roundHeader"> Thursdays Players </td>
+		           </tr>
+		           <tr><td> 
+ 		               <table border="1" class="rosterTable">
+					    <thead>
+					        <tr>
+					          <th>Name</th>
+					          <th>Position</th>
+					      </tr>
+					    </thead>
+					      <tbody>
+					        <tr>
+					            <td>
+								    <select id="round1A" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+								</td>
+					            <td>A</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round1B" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+								</td>
+					            <td>B</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round1C" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+								</td>
+					            <td>C</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round1D" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+								</td>
+					            <td>D</td>
+					        </tr>
+					      </tbody>
+					  </table>
+					</td></tr>
+		           <tr>
+		             <td class="roundHeader"> Fridays Players </td>
+		           <tr><td> 
+ 		               <table border="1">
+					    <thead>
+					        <tr>
+					          <th>Name</th>
+					          <th>Position</th>
+					      </tr>
+					    </thead>
+					      <tbody>
+					        <tr>
+					            <td>
+								    <select id="round2A" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>A</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round2B" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>B</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round2C" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>C</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round2D" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>D</td>
+					        </tr>
+					      </tbody>
+					  </table>
+					</td></tr>
+		           <tr>
+		             <td class="roundHeader"> Saturday's Players </td>
+		           </tr>
+		           <tr><td> 
+ 		               <table border="1">
+					    <thead>
+					        <tr>
+					          <th>Name</th>
+					          <th>Position</th>
+					      </tr>
+					    </thead>
+					      <tbody>
+					        <tr>
+					            <td>
+								    <select id="round3A" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>A</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round3B" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>B</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round3C" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>C</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round3D" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>D</td>
+					        </tr>
+					      </tbody>
+					  </table>
+					</td></tr>
+		           <tr>
+		             <td class="roundHeader"> Sunday's Players</td>
+		           </tr>
+		           <tr><td> 
+ 		               <table border="1">
+					    <thead>
+					        <tr>
+					          <th>Name</th>
+					          <th>Position</th>
+					      </tr>
+					    </thead>
+					      <tbody>
+					        <tr>
+					            <td>
+								    <select id="round4A" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>A</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round4B" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>B</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round4C" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>C</td>
+					        </tr>
+					        <tr>
+					            <td>
+								    <select id="round4D" data-bind="options: teamdata.roster,
+								                           optionsText: 'team_player_name',
+								                           optionsValue: 'team_player_id'"></select>					            
+					            <td>D</td>
+					        </tr>
+					      </tbody>
+					  </table>
+					</td></tr>
+			   </table>
+		    </div>
+		</div>
+    </div>
+    </div>
+	<footer>
+	    <% include ./partials/footer %>
+	</footer>
+  </body>
+</html>

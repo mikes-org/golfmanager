@@ -1,0 +1,57 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+div {
+	padding-left: 10px;
+	padding-right: 10px;	
+	padding-top: 10px;
+	
+}
+
+th, td 
+{
+    padding: 3px;
+      margin: 5px 3px 5px 8px;
+}
+
+div.divhide { display: none }
+div.divshow { display: block }
+div.divLeft { float:left }
+
+.roundHeader {
+   color:blue; 
+   font: bold 15px arial, sans-serif;
+}
+.trRowAlert {
+   color:red; 
+   font: bold 15px arial, sans-serif;
+}
+.trRowNormal {
+   color:black;
+   font: 15px arial, sans-serif;
+}
+
+.messageAlert {
+   color:red; 
+   font: bold 25px arial, sans-serif;
+}
+.messageNormal {
+   color:blue;
+   font: bold 25px arial, sans-serif;
+}
+
+.container{
+    display: flex;
+}
+.fixed{
+    width: 200px;
+}
+.flex-item{
+    flex-grow: 1;
+}

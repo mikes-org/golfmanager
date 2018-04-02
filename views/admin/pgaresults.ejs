@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ../partials/header-admin %>
+	</header>    
+    <script>
+    var self = this;
+    //var self.event_id = "";
+    
+    function resultsModel() 
+    {
+      var tournId = "<%= pga_event_id %>";
+      self.results = ko.observableArray([]);
+      $.getJSON("/admin/tournamentresults/" + tournId,function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            self.results(data.leaderboard);
+            self.event_id = data.id;
+            //console.log("Results:" + data.leaderboard);
+     });
+    };
+	
+    $( document ).ready(function() {
+        console.log( "Getting Results" );
+    	ko.applyBindings(new resultsModel());
+    });
+    
+    function updateResults(data) 
+    {
+    	//alert(data);
+  		var curRound = $('#round').val();
+  		console.log(curRound);
+  		console.log("Event:" + self.event_id);
+        $.getJSON("/admin/updatescores/" + self.event_id + "/" + curRound, function (data) {
+            console.log("Data:" + JSON.stringify(data));
+            //self.results(data.leaderboard);
+            //event_id = data.id;
+            //console.log("Results:" + data.leaderboard);
+     });
+    };
+    
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <div>
+         <ul>
+            <li role="presentation"><input type='button' onclick="updateResults()" value="Update"><input type="text" value="1" id="round"></li>
+        </ul>   
+    </div>
+    <br/>
+    <div>
+		<table border="1">
+		    <thead>
+		        <tr>
+		          <th>Position</th>
+		          <th>Player</th>
+		          <th>Total Score</th>
+		          <th>Total Strokes</th>
+		          <th>Rounds</th>
+	              <th></th>
+		      </tr>
+		    </thead>
+		      <tbody data-bind="foreach: results">
+		        <tr>
+		            <td data-bind="text: position"></td>
+		            <td><span data-bind="text: last_name"></span>, <span data-bind="text: first_name"></span></td>
+		            <td data-bind="text: score"></td>
+		            <td data-bind="text: strokes"></td>
+		            <td data-bind="text: rounds"></td>
+			    <td><button data-bind="attr: {player_id: id}" onclick="getResults(this)">Edit</button></td>
+		        </tr>
+		      </tbody>
+		  </table>
+    </div>
+	<footer>
+	    <% include ../partials/footer %>
+	</footer>
+  </body>
+</html>

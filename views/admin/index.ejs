@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ../partials/header-admin %>
+	</header>    
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %> golf challenge</p>
+    <div>
+	    <lu>
+	    <li><a href="/admin/managepgaplayers">Manage PGA Players</a></li>
+	    <li><a href="/admin/manageevents">Manage Events</a></li>
+	    <li><a href="/admin/manageresults/123">Manager PGA Results</a></li>
+	    <li><a href="/admin/managescores/2c6a8498-4a73-494b-92b9-29bbbcd1d015">Manage Team Scores</a></li>
+	    <li><a href="/admin/pgatournaments/2018">2018 Tournaments</a></li>
+	    <li>Manage Registration</li>
+	    </lu>
+    </div>
+  </body>
+</html>

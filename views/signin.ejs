@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ./partials/header-nonuser %>
+	</header>    
+    <script>
+    
+    function signIn(data) {
+      let usersEMail = $('#usersEmail').val();
+      let usersPwd = $('#usersPwd').val();
+      let eventId = "<%= event_id %>";
+      console.log("User:" + usersEMail + ", " + usersPwd);
+      let userData = {user_email: usersEMail, user_pwd: usersPwd, event_id: eventId};
+	  $.post( "/signin/verifyuser/", userData)
+	  .done(function( data ) {
+		  console.log("Result:" + data)
+		  //alert(data)
+		  if (data.status == "ERROR")
+		  {
+	    	$('#signOnStatus').html(data.message)
+		    $('#signOnStatus').attr('class','trRowAlert')
+		  }
+	      else
+	      {
+	      	  console.log("Success");
+	      	  window.location.href = "/myteam";
+	      }
+	  });
+    }
+ 	
+	</script>
+    <h1><%= title %></h1>
+    <p>Sign in to the  <%= title %> golf challenge</p>
+    <div class='message' id='signOnStatus'></div>
+    <div>
+		<table border="1">
+		      <tbody>
+		        <tr>
+		          <td>EMail</td>
+		          <td><input id="usersEmail" type="text"></td>
+		        </tr>
+		        <tr>
+		          <td>Password</td>
+		          <td><input id="usersPwd" type="password"></td>
+		        </tr>
+		        <tr colspan="2">
+		          <td><input type="button" onclick="signIn()" value="sign in"></td>
+		        </tr>
+		      </tbody>
+		  </table>
+    </div>
+	<footer>
+	    <% include ./partials/footer %>
+	</footer>
+  </body>
+</html>

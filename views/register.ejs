@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ./partials/header-nonuser %>
+	</header>    
+		<script>
+		  var eventId = "<%= event_id %>";
+		  function regUser()
+		  {
+			  let usersName = $('#usersName').val();
+			  let teamName = $('#teamName').val();
+			  if (usersName === "") {
+				  $('#trName').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trName').attr('class','trRowNormal')
+			  }
+			  let usersEMail = $('#usersEmail').val();
+			  if (usersEMail === "") {
+				  $('#trEmail').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trEmail').attr('class','trRowNormal')
+			  }
+			  let regCode = $('#regCode').val();
+			  if (regCode === "") {
+				  $('#trRegCode').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trRegCode').attr('class','trRowNormal')
+			  }
+			  let usersPw = $('#usersPw1').val();
+			  if (usersPw === "") {
+				  $('#trPw1').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trPw1').attr('class','trRowNormal')
+			  }
+			  let usersPw2 = $('#usersPw2').val();
+			  if (usersPw2 === "") {
+				  $('#trPw2').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trPw2').attr('class','trRowNormal')
+			  }
+			  if (usersPw2 != usersPw) 
+			  {
+				  $('#trPw1').attr('class','trRowAlert')
+				  $('#trPw2').attr('class','trRowAlert')
+			      $('#regStatus').html("Passwords do not match")
+				  $('#regStatus').attr('class','trRowAlert')
+				  return false
+			  }
+			  else
+			  {
+				  $('#trPw1').attr('class','trRowNormal')
+				  $('#trPw2').attr('class','trRowNormal')
+			  }
+			  
+			  let userData = {user_name: usersName, user_email: usersEMail, user_event_id: eventId, user_reg_code: regCode, user_password: usersPw, user_team_name: teamName}
+			  console.log(userData)
+			  $.post( "/userdata", userData)
+			  .done(function( data ) {
+				  console.log("Result:" + data)
+				  //alert(data)
+				  if (data.status == "ERROR")
+				  {
+			    	$('#regStatus').html(data.message)
+				    $('#regStatus').attr('class','trRowAlert')
+				  }
+			      else
+			      {
+			    	$('#regStatus').html("Registration Complete!")
+				    $('#regStatus').attr('class','trRowNormal')
+			      }
+			  });
+		  }
+		
+		</script>
+    <h3>Register for Masters golf Challenge</h3>
+<div class="regDiv">
+    
+    <span class='message' id='regStatus'></span>
+
+<table border="1">
+      <tbody data-bind="foreach: events">
+        <tr id='trRegCode' class="trRowNormal">
+         <td>Registration Code:</td>
+          <td><input id='regCode' type="text"></td>
+        </tr>
+        <tr id='trName' class="trRowNormal">
+         <td>Name:</td>
+          <td><input id='usersName' type="text"></td>
+        </tr>
+        <tr id='trTeamName' class="trRowNormal">
+         <td>Team name:</td>
+          <td><input id='teamName' type="text"></td>
+        </tr>
+        <tr id='trEmail' class="trRowNormal">
+         <td>EMail Address:</td>
+          <td><input id='usersEmail' type="text"></td>
+        </tr>
+        <tr id='trPw1' class="trRowNormal">
+         <td>Password:</td>
+          <td><input id='usersPw1' type="password"></td>
+        </tr>
+        <tr id='trPw2' class="trRowNormal">
+         <td>Password confirm:</td>
+          <td><input id='usersPw2' type="password"></td>
+        </tr>
+        <tr>
+         <td colspan=2 style="text-align:center"><input type="button" value="submit" onclick='regUser()'></td>
+        </tr>
+      </tbody>
+  </table>
+  
+
+
+</div> 
+	<footer>
+	    <% include ./partials/footer %>
+	</footer>
+  </body>
+</html>

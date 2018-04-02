@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+	<header>
+	    <% include ./partials/header-nonuser %>
+	</header>    
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %> golf challenge</p>
+    <div>
+        If you have a registration code and want to register click <a href='./register/masters2018'>here</a>  To obtain a registration code contact Jay Lally.
+    </div>
+    <div>
+        Arnold Palmer <a href='./register/arnie2018'>here</a>  To obtain a registration code contact Jay Lally.
+    </div>
+
+    <div>
+        Registerd Masters  users click <a href='./signin/masters2018'>here</a> to sign in!
+    </div>
+    <div>
+        Registerd Palmer users click <a href='./signin/arnie2018'>here</a> to sign in!
+    </div>
+	<header>
+	    <% include ./partials/footer %>
+	</header>    
+  </body>
+</html>
