@@ -1,0 +1,1139 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Golf v2",
+    "version": "1.0"
+  },
+  "host": "api.fantasydata.net",
+  "basePath": "/golf/v2",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "apiKeyHeader": {
+      "type": "apiKey",
+      "name": "Ocp-Apim-Subscription-Key",
+      "in": "header"
+    },
+    "apiKeyQuery": {
+      "type": "apiKey",
+      "name": "subscription-key",
+      "in": "query"
+    }
+  },
+  "security": [
+    {
+      "apiKeyHeader": []
+    },
+    {
+      "apiKeyQuery": []
+    }
+  ],
+  "paths": {
+    "/{format}/Tournaments": {
+      "get": {
+        "operationId": "Schedules",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tournament"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/Players": {
+      "get": {
+        "operationId": "Players",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Player"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/Player/{playerid}": {
+      "get": {
+        "operationId": "Player",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "playerid",
+            "in": "path",
+            "description": "Unique FantasyData Player ID.\nExample:<code>40000019</code>.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Player"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/Leaderboard/{tournamentid}": {
+      "get": {
+        "operationId": "Leaderboard",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "tournamentid",
+            "in": "path",
+            "description": "The TournamentID of a tournament.  TournamentIDs can be found in the Tournaments API.  Valid entries are <code>58</code>, <code>61</code>, etc.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Leaderboard"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/NewsByPlayerID/{playerid}": {
+      "get": {
+        "operationId": "News by Player",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "playerid",
+            "in": "path",
+            "description": "Unique FantasyData Player ID.\nExample:<code>40000019</code>.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/News"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/NewsByDate/{date}": {
+      "get": {
+        "operationId": "News by Date",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "description": "The date of the game(s).\n<br>Examples: <code>2015-JUL-31</code>, <code>2015-SEP-01</code>.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/News"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/News": {
+      "get": {
+        "operationId": "News",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/News"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/Injuries": {
+      "get": {
+        "operationId": "Injuries",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Injury"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/InjuriesByHistorical": {
+      "get": {
+        "operationId": "Injuries (Historical)",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Injury"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/PlayerTournamentStatsByPlayer/{tournamentid}/{playerid}": {
+      "get": {
+        "operationId": "Player Tournament Stats By Player",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "tournamentid",
+            "in": "path",
+            "description": "The TournamentID of a tournament.  TournamentIDs can be found in the Tournaments API.  Valid entries are <code>58</code>, <code>61</code>, etc.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "playerid",
+            "in": "path",
+            "description": "Unique FantasyData Player ID.\nExample:<code>40000019</code>.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PlayerTournament"
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/PlayerTournamentProjectionStats/{tournamentid}": {
+      "get": {
+        "operationId": "Player Tournament Projected Stats (w/ DraftKings Salaries)",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "tournamentid",
+            "in": "path",
+            "description": "The TournamentID of a tournament.  TournamentIDs can be found in the Tournaments API.  Valid entries are <code>78</code>, <code>79</code>, <code>80</code>, etc.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PlayerTournamentProjection"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{format}/PlayerSeasonStats/{season}": {
+      "get": {
+        "operationId": "Player Season Stats (w/ World Golf Rankings)",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "description": "Desired response format. Valid entries are <code>XML</code> or <code>JSON</code>.",
+            "required": true,
+            "type": "string",
+            "default": "XML",
+            "enum": [
+              "XML",
+              "JSON"
+            ]
+          },
+          {
+            "name": "season",
+            "in": "path",
+            "description": "Year of the season.\n<br>Examples: <code>2016</code>, <code>2017</code>.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PlayerSeason"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Tournament": {
+      "properties": {
+        "TournamentID": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "StartDate": {
+          "type": "string"
+        },
+        "EndDate": {
+          "type": "string"
+        },
+        "IsOver": {
+          "type": "boolean"
+        },
+        "IsInProgress": {
+          "type": "boolean"
+        },
+        "Venue": {
+          "type": "string"
+        },
+        "Location": {
+          "type": "string"
+        },
+        "Par": {
+          "type": "integer"
+        },
+        "Yards": {
+          "type": "integer"
+        },
+        "Purse": {
+          "type": "number"
+        },
+        "StartDateTime": {
+          "type": "string"
+        },
+        "Canceled": {
+          "type": "boolean"
+        },
+        "Covered": {
+          "type": "boolean"
+        },
+        "City": {
+          "type": "string"
+        },
+        "State": {
+          "type": "string"
+        },
+        "ZipCode": {
+          "type": "string"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "TimeZone": {
+          "type": "string"
+        },
+        "Format": {
+          "type": "string"
+        },
+        "Rounds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Round"
+          }
+        },
+        "SportRadarTournamentID": {
+          "type": "string"
+        }
+      }
+    },
+    "Round": {
+      "properties": {
+        "RoundID": {
+          "type": "integer"
+        },
+        "Number": {
+          "type": "integer"
+        },
+        "Day": {
+          "type": "string"
+        }
+      }
+    },
+    "Player": {
+      "properties": {
+        "PlayerID": {
+          "type": "integer"
+        },
+        "FirstName": {
+          "type": "string"
+        },
+        "LastName": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "integer"
+        },
+        "Swings": {
+          "type": "string"
+        },
+        "PgaDebut": {
+          "type": "integer"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "BirthDate": {
+          "type": "string"
+        },
+        "BirthCity": {
+          "type": "string"
+        },
+        "BirthState": {
+          "type": "string"
+        },
+        "College": {
+          "type": "string"
+        },
+        "PhotoUrl": {
+          "type": "string"
+        },
+        "SportRadarPlayerID": {
+          "type": "string"
+        },
+        "PgaTourPlayerID": {
+          "type": "integer"
+        },
+        "RotoworldPlayerID": {
+          "type": "integer"
+        },
+        "RotoWirePlayerID": {
+          "type": "integer"
+        },
+        "FantasyAlarmPlayerID": {
+          "type": "integer"
+        },
+        "DraftKingsName": {
+          "type": "string"
+        },
+        "FantasyDraftName": {
+          "type": "string"
+        },
+        "FanDuelName": {
+          "type": "string"
+        },
+        "FantasyDraftPlayerID": {
+          "type": "integer"
+        }
+      }
+    },
+    "Leaderboard": {
+      "properties": {
+        "Tournament": {
+          "$ref": "#/definitions/Tournament"
+        },
+        "Players": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerTournament"
+          }
+        }
+      }
+    },
+    "PlayerTournament": {
+      "properties": {
+        "PlayerTournamentID": {
+          "type": "integer"
+        },
+        "PlayerID": {
+          "type": "integer"
+        },
+        "TournamentID": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Rank": {
+          "type": "integer"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "TotalScore": {
+          "type": "number"
+        },
+        "TotalStrokes": {
+          "type": "number"
+        },
+        "TotalThrough": {
+          "type": "integer"
+        },
+        "Earnings": {
+          "type": "number"
+        },
+        "FedExPoints": {
+          "type": "integer"
+        },
+        "FantasyPoints": {
+          "type": "number"
+        },
+        "FantasyPointsDraftKings": {
+          "type": "number"
+        },
+        "DraftKingsSalary": {
+          "type": "integer"
+        },
+        "DoubleEagles": {
+          "type": "number"
+        },
+        "Eagles": {
+          "type": "number"
+        },
+        "Birdies": {
+          "type": "number"
+        },
+        "Pars": {
+          "type": "number"
+        },
+        "Bogeys": {
+          "type": "number"
+        },
+        "DoubleBogeys": {
+          "type": "number"
+        },
+        "WorseThanDoubleBogey": {
+          "type": "number"
+        },
+        "HoleInOnes": {
+          "type": "number"
+        },
+        "StreaksOfThreeBirdiesOrBetter": {
+          "type": "number"
+        },
+        "BogeyFreeRounds": {
+          "type": "number"
+        },
+        "RoundsUnderSeventy": {
+          "type": "number"
+        },
+        "TripleBogeys": {
+          "type": "number"
+        },
+        "WorseThanTripleBogey": {
+          "type": "number"
+        },
+        "TeeTime": {
+          "type": "string"
+        },
+        "MadeCut": {
+          "type": "number"
+        },
+        "Win": {
+          "type": "number"
+        },
+        "TournamentStatus": {
+          "type": "string"
+        },
+        "IsAlternate": {
+          "type": "boolean"
+        },
+        "FanDuelSalary": {
+          "type": "integer"
+        },
+        "FantasyDraftSalary": {
+          "type": "integer"
+        },
+        "MadeCutDidNotFinish": {
+          "type": "boolean"
+        },
+        "Rounds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerRound"
+          }
+        },
+        "OddsToWin": {
+          "type": "number"
+        },
+        "OddsToWinDescription": {
+          "type": "string"
+        },
+        "FantasyPointsFanDuel": {
+          "type": "number"
+        },
+        "FantasyPointsFantasyDraft": {
+          "type": "number"
+        },
+        "StreaksOfFourBirdiesOrBetter": {
+          "type": "number"
+        },
+        "StreaksOfFiveBirdiesOrBetter": {
+          "type": "number"
+        },
+        "ConsecutiveBirdieOrBetterCount": {
+          "type": "number"
+        },
+        "BounceBackCount": {
+          "type": "number"
+        },
+        "RoundsWithFiveOrMoreBirdiesOrBetter ": {
+          "type": "number"
+        }
+      }
+    },
+    "PlayerRound": {
+      "properties": {
+        "Number": {
+          "type": "integer"
+        },
+        "Day": {
+          "type": "string"
+        },
+        "Par": {
+          "type": "integer"
+        },
+        "Score": {
+          "type": "integer"
+        },
+        "BogeyFree": {
+          "type": "boolean"
+        },
+        "IncludesStreakOfThreeBirdiesOrBetter": {
+          "type": "boolean"
+        },
+        "DoubleEagles": {
+          "type": "integer"
+        },
+        "Eagles": {
+          "type": "integer"
+        },
+        "Birdies": {
+          "type": "integer"
+        },
+        "Pars": {
+          "type": "integer"
+        },
+        "Bogeys": {
+          "type": "integer"
+        },
+        "DoubleBogeys": {
+          "type": "integer"
+        },
+        "WorseThanDoubleBogey": {
+          "type": "integer"
+        },
+        "HoleInOnes": {
+          "type": "integer"
+        },
+        "TripleBogeys": {
+          "type": "integer"
+        },
+        "WorseThanTripleBogey": {
+          "type": "integer"
+        },
+        "Holes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerHole"
+          }
+        },
+        "LongestBirdieOrBetterStreak": {
+          "type": "number"
+        },
+        "ConsecutiveBirdieOrBetterCount": {
+          "type": "number"
+        },
+        "BounceBackCount": {
+          "type": "number"
+        },
+        "IncludesStreakOfFourBirdiesOrBetter": {
+          "type": "boolean"
+        },
+        "IncludesStreakOfFiveBirdiesOrBetter": {
+          "type": "boolean"
+        },
+        "IncludesFiveOrMoreBirdiesOrBetter": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PlayerHole": {
+      "properties": {
+        "Number": {
+          "type": "integer"
+        },
+        "Par": {
+          "type": "integer"
+        },
+        "Score": {
+          "type": "integer"
+        },
+        "ToPar": {
+          "type": "integer"
+        },
+        "HoleInOne": {
+          "type": "boolean"
+        },
+        "DoubleEagle": {
+          "type": "boolean"
+        },
+        "Eagle": {
+          "type": "boolean"
+        },
+        "Birdie": {
+          "type": "boolean"
+        },
+        "IsPar": {
+          "type": "boolean"
+        },
+        "Bogey": {
+          "type": "boolean"
+        },
+        "DoubleBogey": {
+          "type": "boolean"
+        },
+        "WorseThanDoubleBogey": {
+          "type": "boolean"
+        }
+      }
+    },
+    "News": {
+      "properties": {
+        "NewsID": {
+          "type": "integer"
+        },
+        "PlayerID": {
+          "type": "integer"
+        },
+        "Title": {
+          "type": "string"
+        },
+        "Content": {
+          "type": "string"
+        },
+        "Url": {
+          "type": "string"
+        },
+        "Source": {
+          "type": "string"
+        },
+        "TermsOfUse": {
+          "type": "string"
+        },
+        "Updated": {
+          "type": "string"
+        }
+      }
+    },
+    "Injury": {
+      "properties": {
+        "InjuryID": {
+          "type": "integer"
+        },
+        "PlayerID": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Active": {
+          "type": "boolean"
+        },
+        "StartDate": {
+          "type": "string"
+        },
+        "Status": {
+          "type": "string"
+        },
+        "BodyPart": {
+          "type": "string"
+        },
+        "ExpectedReturn": {
+          "type": "string"
+        }
+      }
+    },
+    "PlayerTournamentProjection": {
+      "properties": {
+        "PlayerTournamentID": {
+          "type": "integer"
+        },
+        "PlayerID": {
+          "type": "integer"
+        },
+        "TournamentID": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Rank": {
+          "type": "integer"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "TotalScore": {
+          "type": "number"
+        },
+        "TotalStrokes": {
+          "type": "number"
+        },
+        "TotalThrough": {
+          "type": "integer"
+        },
+        "Earnings": {
+          "type": "number"
+        },
+        "FedExPoints": {
+          "type": "integer"
+        },
+        "FantasyPoints": {
+          "type": "number"
+        },
+        "FantasyPointsDraftKings": {
+          "type": "number"
+        },
+        "DraftKingsSalary": {
+          "type": "integer"
+        },
+        "DoubleEagles": {
+          "type": "number"
+        },
+        "Eagles": {
+          "type": "number"
+        },
+        "Birdies": {
+          "type": "number"
+        },
+        "Pars": {
+          "type": "number"
+        },
+        "Bogeys": {
+          "type": "number"
+        },
+        "DoubleBogeys": {
+          "type": "number"
+        },
+        "WorseThanDoubleBogey": {
+          "type": "number"
+        },
+        "HoleInOnes": {
+          "type": "number"
+        },
+        "StreaksOfThreeBirdiesOrBetter": {
+          "type": "number"
+        },
+        "BogeyFreeRounds": {
+          "type": "number"
+        },
+        "RoundsUnderSeventy": {
+          "type": "number"
+        },
+        "TripleBogeys": {
+          "type": "number"
+        },
+        "WorseThanTripleBogey": {
+          "type": "number"
+        },
+        "TeeTime": {
+          "type": "string"
+        },
+        "MadeCut": {
+          "type": "number"
+        },
+        "Win": {
+          "type": "number"
+        },
+        "TournamentStatus": {
+          "type": "string"
+        },
+        "IsAlternate": {
+          "type": "boolean"
+        },
+        "FanDuelSalary": {
+          "type": "integer"
+        },
+        "FantasyDraftSalary": {
+          "type": "integer"
+        },
+        "MadeCutDidNotFinish": {
+          "type": "boolean"
+        },
+        "Rounds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerRound"
+          }
+        },
+        "OddsToWin": {
+          "type": "number"
+        },
+        "OddsToWinDescription": {
+          "type": "string"
+        },
+        "FantasyPointsFanDuel": {
+          "type": "number"
+        },
+        "FantasyPointsFantasyDraft": {
+          "type": "number"
+        },
+        "StreaksOfFourBirdiesOrBetter": {
+          "type": "number"
+        },
+        "StreaksOfFiveBirdiesOrBetter": {
+          "type": "number"
+        },
+        "ConsecutiveBirdieOrBetterCount": {
+          "type": "number"
+        },
+        "BounceBackCount": {
+          "type": "number"
+        },
+        "RoundsWithFiveOrMoreBirdiesOrBetter ": {
+          "type": "number"
+        }
+      }
+    },
+    "PlayerSeason": {
+      "properties": {
+        "PlayerSeasonID": {
+          "type": "integer"
+        },
+        "Season": {
+          "type": "integer"
+        },
+        "PlayerID": {
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "WorldGolfRank": {
+          "type": "integer"
+        },
+        "WorldGolfRankLastWeek": {
+          "type": "integer"
+        },
+        "Events": {
+          "type": "integer"
+        },
+        "AveragePoints": {
+          "type": "number"
+        },
+        "TotalPoints": {
+          "type": "number"
+        },
+        "PointsLost": {
+          "type": "number"
+        },
+        "PointsGained": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
