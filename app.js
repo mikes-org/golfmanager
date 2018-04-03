@@ -23,6 +23,7 @@ var index = require('./routes/index');
 var admin_index = require('./routes/admin/index');
 var users = require('./routes/users');
 var admin_pgadata = require('./routes/admin/pgadata');
+var admin_editteam = require('./routes/admin/editteam');
 
 var register = require('./routes/register');
 var signin = require('./routes/signin');
@@ -65,6 +66,7 @@ app.use('/pgaplayers', pgaplayers);
 app.use('/userdata', userdata);
 app.use('/admin/', admin_index);
 app.use('/admin', admin_pgadata);
+app.use('/admin', admin_editteam);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

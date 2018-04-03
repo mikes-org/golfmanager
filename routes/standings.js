@@ -105,7 +105,7 @@ router.get('/calculate/:event_id', async function(req, res, next) {
 		    console.log("User2")
 	    	var user_team = {};
 	    	user_team.user_name = user.user_name;
-	    	user_team.team_name = "not";
+	    	user_team.team_name = user.user_team_name;
 	    	user_team.user_id = user._id;
 	    	user_team.rounds = [];
 		    let rounds = await getUserTeam(req.params.event_id, user_team.user_id, eventData.event_tourn_id);

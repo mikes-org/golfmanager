@@ -33,16 +33,16 @@ async function verifyUserRegistration(user)
 	}
 	
 	var userExists = false
-	await User.find({ user_email: user.user_email, user_event_id: user.event_id }).exec().then((users) => {
-	    console.log("USERS" + util.inspect(users));
-	    if (users.length > 0)
+	console.log("Looking up user:" + util.inspect(user));
+	userData = await User.find({ user_email: user.user_email, user_event_id: user.user_event_id }).exec();
+    console.log("USERS" + util.inspect(userData));
+	if (userData)
+	{
+	    if (userData.length > 0)
 	    {
 	    	userExists = true
 	    }
-	}, err => {
-		console.log("Error:" + err)
-	 }
-	);
+	}
 	if (userExists == true)
 	{
 		status = {status:"ERROR" , message: "EMail address already exits for this event!"}
@@ -90,11 +90,16 @@ router.post('/', async function(req, res, next) {
 });
 
 /* UPDATE USER */
-router.put('/:id', function(req, res, next) {
-  User.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
+router.put('/:id', async function(req, res, next) {
+    console.log("Updating user:" + util.inspect(req.body));
+    try {
+
+	let userData = User.findByIdAndUpdate(req.params.id, req.body).exec();
+        res.json({status: "OK"});
+    } catch (error)
+    {
+      res.json({status:"ERROR", message: error});
+    }
 });
 
 /* DELETE USER */

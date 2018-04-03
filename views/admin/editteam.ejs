@@ -9,7 +9,7 @@
   </head>
   <body>
 	<header>
-		<%-  include partials/header %>
+	    <% include ../partials/header-admin %>
 	</header>    
     <script>
     var userId = "<%= user_id %>";
@@ -145,7 +145,7 @@
  	  
 	  self.team_json_data.playerRounds = rounds;
       var updateData = {user_id: userId, event_id: eventId, team :  JSON.stringify(self.team_json_data) }
-	  $.post( "teams/replace", updateData)
+	  $.post( "/teams/replace", updateData)
 	  .done(function( data ) {
 		  console.log("Result:" + data)
 		  //alert(data)
@@ -450,7 +450,7 @@
     </div>
     </div>
 	<footer>
-	    <% include ./partials/footer %>
+	    <% include ../partials/footer %>
 	</footer>
   </body>
 </html>

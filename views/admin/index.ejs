@@ -15,12 +15,11 @@
     <p>Welcome to <%= title %> golf challenge</p>
     <div>
 	    <lu>
+	    <li><a href="/admin/manageusers/<%= event_id %>" >Manager Users</a></li>
 	    <li><a href="/admin/managepgaplayers">Manage PGA Players</a></li>
 	    <li><a href="/admin/manageevents">Manage Events</a></li>
-	    <li><a href="/admin/manageresults/123">Manager PGA Results</a></li>
-	    <li><a href="/admin/managescores/2c6a8498-4a73-494b-92b9-29bbbcd1d015">Manage Team Scores</a></li>
-	    <li><a href="/admin/pgatournaments/2018">2018 Tournaments</a></li>
-	    <li>Manage Registration</li>
+	    <li><a href="/admin/manageresults/<%= event_id %>">Manager PGA Results</a></li>
+	    <li><a href="/admin/managescores/<%= event_id %>">Manage Team Scores</a></li>
 	    </lu>
     </div>
   </body>

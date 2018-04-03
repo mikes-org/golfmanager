@@ -9,6 +9,13 @@ router.get('/managepgaplayers', function(req, res, next) {
 });
 
 /* GET home page. */
+router.get('/manageusers/:event_id', function(req, res, next) {
+  res.render('admin/eventusers', { title: 'Manage Users', event_id : req.params.event_id });
+});
+
+
+
+/* GET home page. */
 router.get('/pgatournaments/:year', async function(req, res, next) {
 
   res.render('admin/pgatournaments', { title: 'Pga Tournaments', tourn_year: req.params.year });

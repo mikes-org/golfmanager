@@ -24,6 +24,9 @@ div.divhide { display: none }
 div.divshow { display: block }
 div.divLeft { float:left }
 
+div.divPopupHidden { display: none }
+div.divPopupShow { display: float }
+
 a.divLarge {
    color:blue; 
    font: bold 25px arial, sans-serif;
