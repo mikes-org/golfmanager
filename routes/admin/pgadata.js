@@ -5,7 +5,7 @@ var util = require( 'util' );
 
 /* GET home page. */
 router.get('/managepgaplayers', function(req, res, next) {
-  res.render('admin/pgaplayers', { title: 'Admin Pga Players' });
+  res.render('admin/pgaplayers', { title: 'Admin Pga Players', event_id: '' });
 });
 
 /* GET home page. */
@@ -18,7 +18,7 @@ router.get('/manageusers/:event_id', function(req, res, next) {
 /* GET home page. */
 router.get('/pgatournaments/:year', async function(req, res, next) {
 
-  res.render('admin/pgatournaments', { title: 'Pga Tournaments', tourn_year: req.params.year });
+  res.render('admin/pgatournaments', { title: 'Pga Tournaments', tourn_year: req.params.year, event_id : '' });
 });
 
 /* GET home page. */
@@ -74,15 +74,15 @@ router.get('/tournamentresults/:id', async function(req, res, next) {
 
 /* GET home page. *//* GET home page. */
 router.get('/manageevents', function(req, res, next) {
-  res.render('admin/pgaevents', { title: 'Admin Pga Events' });
+  res.render('admin/pgaevents', { title: 'Admin Pga Events', event_id: '' });
 });
 
 router.get('/manageresults/:pga_event_id', function(req, res, next) {
-  res.render('admin/pgaresults', { title: '2016 Masters', pga_event_id: req.params.pga_event_id });
+  res.render('admin/pgaresults', { title: '2016 Masters', event_id: req.params.pga_event_id });
 });
 
 router.get('/managescores/:pga_event_id', function(req, res, next) {
-  res.render('admin/teamscores', { title: 'Team Scores', pga_event_id: req.params.pga_event_id });
+  res.render('admin/teamscores', { title: 'Team Scores', event_id: req.params.pga_event_id });
 });
 
 

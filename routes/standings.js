@@ -35,26 +35,31 @@ async function getEvent(event_id)
 
 async function getPlayerScore(event_id, player_id)
 {
-	console.log("Score finding for:" + event_id + "," + player_id);
-	playerScoreData  = await Score.find({player_id: player_id, event_id: event_id}).exec();
 	let retScore = {round:[{},{},{},{}], total:{}}
-	console.log("Got Score" + playerScoreData);
-    if (playerScoreData.length > 0)
+    try {
+		console.log("Score finding for:" + event_id + "," + player_id);
+		playerScoreData  = await Score.find({player_id: player_id, event_id: event_id}).exec();
+		console.log("Got Score" + util.inspect(playerScoreData));
+	    if (playerScoreData.length > 0)
+	    {
+	    	console.log("Setting score for" + player_id);
+	    	
+	    	
+	    	retScore.round[0].score = playerScoreData[0].round_1_to_par;
+	    	retScore.round[0].position = playerScoreData[0].round_1_position;
+	    	retScore.round[1].score = playerScoreData[0].round_2_to_par;
+	    	retScore.round[1].position = playerScoreData[0].round_2_position;
+	    	retScore.round[2].score = playerScoreData[0].round_3_to_par;
+	    	retScore.round[2].position = playerScoreData[0].round_3_position;
+	    	retScore.round[3].score = playerScoreData[0].round_4_to_par;
+	    	retScore.round[3].position = playerScoreData[0].round_4_position;
+	    	retScore.total.score = playerScoreData[0].total_to_par;
+	    	retScore.total.position = playerScoreData[0].total_position;
+		    console.log("ScoreReturn:" + util.inspect(retScore));
+	    }
+    } catch (error)
     {
-    	console.log("Setting score for" + player_id);
-    	
-    	
-    	retScore.round[0].score = playerScoreData[0].round_1_to_par;
-    	retScore.round[0].position = playerScoreData[0].round_1_position;
-    	retScore.round[1].score = playerScoreData[0].round_1_to_par;
-    	retScore.round[1].position = playerScoreData[0].round_1_position;
-    	retScore.round[2].score = playerScoreData[0].round_1_to_par;
-    	retScore.round[2].position = playerScoreData[0].round_1_position;
-    	retScore.round[3].score = playerScoreData[0].round_1_to_par;
-    	retScore.round[3].position = playerScoreData[0].round_1_position;
-    	retScore.total.score = playerScoreData[0].total_to_par;
-    	retScore.total.position = playerScoreData[0].total_position;
-	    console.log("ScoreReturn:" + util.inspect(retScore));
+    	console.log("ERR:" + util.inspect(error));
     }
     return retScore;
 }
@@ -62,23 +67,45 @@ async function getPlayerScore(event_id, player_id)
 async function getUserTeam(event_id, user_id, tourn_id)
 {
 	
-
+  console.log("getUserTeamStart");
   var retVal = {playerRounds:[ {players:[{},{},{},{} ] } , {players:[{},{},{},{}] } , {players:[{},{},{},{}] } , {players:[{},{},{},{}] }  ]};
   let data2 = await TeamPlayer.find({team_user_id: user_id ,team_event_id: event_id}).exec();
 
   //console.log("TeamPlayers:" + util.inspect(data2));
-  console.log("Rounds:" + util.inspect(retVal.playerRounds));
+  //console.log("Rounds:" + util.inspect(data2));
   for (i=0;i < data2.length;i++)
   {
-	  teamPlayer = data2[i];
-      console.log("PLAYER:" + util.inspect(teamPlayer));
+	  teamPlayer = JSON.parse(JSON.stringify(data2[i]));
+      //console.log("PLAYER:" + util.inspect(teamPlayer));
 	  var playerScore = await getPlayerScore(tourn_id, teamPlayer.team_player_id);
-	  teamPlayer.scores = playerScore[teamPlayer.team_player_round-1];
+	  teamPlayer.scores = playerScore.round[teamPlayer.team_player_round-1]; 
+	  //console.log("PLAYER2:" + util.inspect(teamPlayer));
 	  retVal.playerRounds[teamPlayer.team_player_round-1].players[teamPlayer.team_player_position] = teamPlayer;
+  } 
+  
+  
+  console.log(" *********** getUserTeamEnd ********************");
+  
+  for (nRnd=0;nRnd < retVal.playerRounds.length;nRnd++)
+  {
+	  if (retVal.playerRounds[nRnd])
+	  {
+		  let pData = JSON.parse(JSON.stringify(retVal.playerRounds[nRnd]));
+		  nTotalScore = 0;
+		  for (nPlay=0;nPlay<pData.players.length;nPlay++)
+		  {
+			  //console.log("PlayerRound:" + util.inspect(pData.players[nPlay]));
+			  if (pData.players[nPlay].scores && pData.players[nPlay].scores.score)
+			  {
+				  nTotalScore = nTotalScore + pData.players[nPlay].scores.score;
+			  }
+		  }
+		  pData.roundTotal = nTotalScore;
+		  retVal.playerRounds[nRnd].roundTotal = nTotalScore;
+	  }
   }
-  console.log("TeamPlayers:" +  util.inspect(retVal));
-  
-  
+  console.log(" *********** getUserTeamEnd2 ********************" );
+  console.log("TeamPlayers:" +  util.inspect(retVal , { depth : 6}));
   return retVal;
 	
 }
@@ -113,7 +140,7 @@ router.get('/calculate/:event_id', async function(req, res, next) {
 		  	retVal.teams.push(user_team);
 	      }
 		    
-	      console.log("Cal Done:" + util.inspect(retVal, {depth:10}));
+	      console.log("Cal Done:" + util.inspect(retVal, {depth:1}));
 	    
     } catch (err)
     {

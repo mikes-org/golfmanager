@@ -51,7 +51,7 @@ async function readEventScores() {
 
 	var obj = {};
 	console.log("reading1");
-	obj = fs.readFileSync("./data/leaderboard.json", 'utf8'); // ,function (err, data) {
+	obj = fs.readFileSync("./data/leaderboard-final.json", 'utf8'); // ,function (err, data) {
 	var ret  = JSON.parse(obj);
 	//console.log("parsed" + util.inspect(ret));
 	console.log("read")
@@ -228,7 +228,7 @@ exports.getAndUpdateScores = async function(event_id, lastRound)
 	console.log("GETTING Scores" + lastRound + "," + event_id)
 	console.log("Clearing Scores table");
 	try {
-	    data = await Score.remove({event_id: event_id}).exec();
+	    data = await Score.remove({}).exec();
 	    console.log("Table cleared" + data);
 		console.log("reading scores ");
 		scoreData = await readEventScores();

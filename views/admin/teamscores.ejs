@@ -17,7 +17,7 @@
     
     function resultsModel() 
     {
-      var tournId = "<%= pga_event_id %>";
+      var tournId = "<%= event_id %>";
       self.results = ko.observableArray([]);
       $.getJSON("/scores/" + tournId,function (data) {
             console.log("Data:" + JSON.stringify(data));

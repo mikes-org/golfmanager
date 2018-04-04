@@ -4,6 +4,7 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="/javascripts/knockout-3.4.2.js" type="text/javascript"></script>
     <script type="text/javascript" src="/javascripts/jquery-1.11.1.min.js"></script>
   </head>
@@ -80,7 +81,7 @@
 								<table border="1">
 								    <thead>
 								        <tr data-bind="foreach: playerRounds">
-								          <th  data-bindXX="text: team_player_round"></th>
+								          <th data-bind="text: $index() + 1"></th>
 								      </tr>
 								    </thead>
 								      <tbody>
@@ -95,17 +96,18 @@
 												      </tr>
 												    </thead>
 												      <tbody data-bind="foreach: players">
-												        <tr>
+												        <tr data-bind="if: $data.team_player_name">
 												           <td  data-bind="text: team_player_name"></td>
-												           <td  data-bind="text: team_player_position"></td>
-												           <td  data-bind="text: team_player_position"></td>
+												           <td  data-bind="text: scores.score"></td>
+												           <td  data-bind="text: scores.position"></td>
 											            </tr>
 											        </tbody>
 											  </table>
+											  <span>Round Total:&nbsp;&nbsp;</span><span data-bind="text: roundTotal"><span>
 								            </td>
-							        </tr>
-							      </tbody>
-							  </table>
+							            </tr>
+							         </tbody>
+							     </table>
                              </span>				            
 				            </td>
 				        </tr>
