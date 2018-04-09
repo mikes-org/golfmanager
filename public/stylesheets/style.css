@@ -54,6 +54,11 @@ a.divLarge {
    font: bold 25px arial, sans-serif;
 }
 
+td.tdTitle {
+   color:blue;
+   font: bold 25px arial, sans-serif;
+}
+
 .container{
     display: flex;
 }

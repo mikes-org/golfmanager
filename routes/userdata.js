@@ -3,15 +3,24 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/User.js');
 var Event = require('../models/Event.js');
+var UserEvent = require('../models/UserEvent.js');
 var util = require( 'util' );
 
 
 /* GET ALL USERS */
-router.get('/', function(req, res, next) {
-  User.find(function (err, users) {
-    if (err) return next(err);
-    res.json(users);
-  });
+router.get('/',async  function(req, res, next) {
+  console.log("Get user with event");
+  let users = await User.find().exec();
+  let usersWithEvent =  JSON.parse(JSON.stringify(users));
+  for (i=0;i<users.length;i++)
+  {
+     let ue = await UserEvent.findOne({user_id: users[i]._id} ).exec();
+     //console.log("ue:" + ue);
+     usersWithEvent[i].event_id = ue.event_id;
+     
+  }
+  res.json(usersWithEvent);
+  
 });
 
 

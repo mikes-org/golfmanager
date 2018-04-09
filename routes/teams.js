@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var util = require( 'util' );
 var Team = require('../models/Team.js');
 var TeamPlayer = require('../models/TeamPlayer.js');
+var UserEvent = require('../models/UserEvent.js');
 
 /* GET ALL TEAMS */
 router.get('/', function(req, res, next) {
@@ -18,7 +19,14 @@ router.get('/:team_user_id/:team_event_id', async function(req, res, next) {
 	
   console.log("Getting Team:" + req.params.team_user_id + " Event:"+ req.params.team_event_id);
   
-  let data = await Team.find({team_user_id: req.params.team_user_id ,team_event_id: req.params.team_event_id}).exec();
+  let userEvent = await UserEvent.findOne({user_id: req.params.team_user_id, event_id: req.params.team_event_id});
+  if (userEvent == null)
+  {
+	  return {status: "ERROR", message: 'User event not found'};
+  }
+  
+  console.log("Getting Team:" + userEvent._id + " Event:"+ req.params.team_event_id);
+  let data = await Team.find({team_user_id: userEvent._id ,team_event_id: req.params.team_event_id}).exec();
 
   var retVal = {roster:[],playerRounds:[[{},{},{},{}],[{},{},{},{}],[{},{},{},{}],[{},{},{},{}]]};
   console.log("Team:" + util.inspect(data));
@@ -29,7 +37,7 @@ router.get('/:team_user_id/:team_event_id', async function(req, res, next) {
   });
   //console.log("TeamPlayer:" +  util.inspect(retVal));
   
-  let data2 = await TeamPlayer.find({team_user_id: req.params.team_user_id ,team_event_id: req.params.team_event_id}).exec();
+  let data2 = await TeamPlayer.find({team_user_id: userEvent._id ,team_event_id: req.params.team_event_id}).exec();
 
   console.log("TeamPlayers:" + util.inspect(data2));
   console.log("Rounds:" + util.inspect(retVal.playerRounds));

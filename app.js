@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/mastersdb')
 var pgaplayers = require('./routes/pgaplayers');
 var userdata = require('./routes/userdata');
 var events = require('./routes/events');
+var userevents = require('./routes/userevents');
 var scores = require('./routes/scores');
 var teams = require('./routes/teams');
 var teamplayers = require('./routes/teamplayers');
@@ -54,6 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/events', events);
+app.use('/userevents', userevents);
 app.use('/scores', scores);
 app.use('/teams', teams);
 app.use('/teamplayers', teamplayers);

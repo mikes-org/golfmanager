@@ -51,7 +51,7 @@ async function readEventScores() {
 
 	var obj = {};
 	console.log("reading1");
-	obj = fs.readFileSync("./data/leaderboard-final.json", 'utf8'); // ,function (err, data) {
+	obj = fs.readFileSync("./data/masters-2018-final.json", 'utf8'); // ,function (err, data) {
 	var ret  = JSON.parse(obj);
 	//console.log("parsed" + util.inspect(ret));
 	console.log("read")

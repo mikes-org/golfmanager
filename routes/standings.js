@@ -3,6 +3,7 @@ var router = express.Router();
 var util = require('util');
 var User = require('../models/User.js');
 var Event = require('../models/Event.js');
+var UserEvent = require('../models/UserEvent.js');
 var Team = require('../models/Team.js');
 var TeamPlayer = require('../models/TeamPlayer.js');
 var Score = require('../models/Score.js');
@@ -17,7 +18,7 @@ router.get('/', function(req, res, next) {
   }
   else
   {
-    res.render('index', { title: '2018 Masters', message: 'Sign in for access'});
+    res.render('standings', { title: 'Event Standings', user_id: '' , event_id: 'b404a8d5-5e33-4417-ae20-5d4d147042ee', user_name : 'Masters' });
   }
 });
 
@@ -68,10 +69,11 @@ async function getUserTeam(event_id, user_id, tourn_id)
 {
 	
   console.log("getUserTeamStart");
+  
   var retVal = {playerRounds:[ {players:[{},{},{},{} ] } , {players:[{},{},{},{}] } , {players:[{},{},{},{}] } , {players:[{},{},{},{}] }  ]};
   let data2 = await TeamPlayer.find({team_user_id: user_id ,team_event_id: event_id}).exec();
 
-  //console.log("TeamPlayers:" + util.inspect(data2));
+  //console.log("TeamPlayers:" + util.inspect(user_id));
   //console.log("Rounds:" + util.inspect(data2));
   for (i=0;i < data2.length;i++)
   {
@@ -86,27 +88,33 @@ async function getUserTeam(event_id, user_id, tourn_id)
   
   console.log(" *********** getUserTeamEnd ********************");
   
-  for (nRnd=0;nRnd < retVal.playerRounds.length;nRnd++)
+  let overallScore = 0;
+  let pRetData = JSON.parse(JSON.stringify(retVal));
+
+  for (nRnd=0;nRnd < pRetData.playerRounds.length;nRnd++)
   {
 	  if (retVal.playerRounds[nRnd])
 	  {
-		  let pData = JSON.parse(JSON.stringify(retVal.playerRounds[nRnd]));
+		  //let pData = JSON.parse(JSON.stringify(retVal.playerRounds[nRnd]));
 		  nTotalScore = 0;
-		  for (nPlay=0;nPlay<pData.players.length;nPlay++)
+		  for (nPlay=0;nPlay<pRetData.playerRounds[nRnd].players.length;nPlay++)
 		  {
 			  //console.log("PlayerRound:" + util.inspect(pData.players[nPlay]));
-			  if (pData.players[nPlay].scores && pData.players[nPlay].scores.score)
+			  if (pRetData.playerRounds[nRnd].players[nPlay].scores && pRetData.playerRounds[nRnd].players[nPlay].scores.score)
 			  {
-				  nTotalScore = nTotalScore + pData.players[nPlay].scores.score;
+				  nTotalScore = nTotalScore + pRetData.playerRounds[nRnd].players[nPlay].scores.score;
 			  }
 		  }
-		  pData.roundTotal = nTotalScore;
-		  retVal.playerRounds[nRnd].roundTotal = nTotalScore;
+		  //retVal.playerRounds[nRnd].roundTotal = nTotalScore;
+		  pRetData.playerRounds[nRnd].roundTotal = nTotalScore;
+		  overallScore = overallScore + nTotalScore;
+		  
 	  }
   }
+  pRetData.overAllScore = overallScore;
   console.log(" *********** getUserTeamEnd2 ********************" );
-  console.log("TeamPlayers:" +  util.inspect(retVal , { depth : 6}));
-  return retVal;
+  console.log("TeamPlayers:" +  util.inspect(pRetData , { depth : 6}));
+  return pRetData;
 	
 }
 
@@ -124,23 +132,29 @@ router.get('/calculate/:event_id', async function(req, res, next) {
 	    {
 	    	return {status: "ERROR", message: "Event Data not found"};
 	    }
-	    let users = await User.find({user_event_id : req.params.event_id}).exec()
+	    
+	    let users = await UserEvent.find({event_id : req.params.event_id}).exec()
 	    console.log("Users")
 	    for (let i=0;i<users.length;i++)
 	    {
-	    	let user = users[i];
-		    console.log("User2")
-	    	var user_team = {};
-	    	user_team.user_name = user.user_name;
-	    	user_team.team_name = user.user_team_name;
-	    	user_team.user_id = user._id;
-	    	user_team.rounds = [];
-		    let rounds = await getUserTeam(req.params.event_id, user_team.user_id, eventData.event_tourn_id);
-			user_team.playerRounds = rounds.playerRounds;
-		  	retVal.teams.push(user_team);
+	    	let user = await User.findOne({ _id: users[i].user_id });
+	    	if (user != null)
+	    	{
+		    	var user_team = {};
+		    	user_team.user_name = user.user_name;
+		    	user_team.user_full_name = user.user_full_name;
+		    	user_team.team_name = user.user_team_name;
+		    	user_team.user_id = users[i]._id;
+		    	//user_team.rounds = [];
+			    //console.log("User2:" + util.inspect(user_team));
+			    let rounds = await getUserTeam(req.params.event_id, user_team.user_id, eventData.event_tourn_id);
+				user_team.playerRounds = rounds.playerRounds;
+				user_team.overAllScore = rounds.overAllScore;
+			  	retVal.teams.push(user_team);
+	    	}
 	      }
 		    
-	      console.log("Cal Done:" + util.inspect(retVal, {depth:1}));
+	      console.log("Cal Done:" + util.inspect(retVal, {depth:12}));
 	    
     } catch (err)
     {
